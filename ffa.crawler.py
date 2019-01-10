@@ -20,7 +20,7 @@ f.write(title)
 #run on all teams 
 for j in range(0,34): 
     #run on all tables in each team
-    for i in range(1,7):
+    for i in range(1,14):
         if(i==1):
             page = loadpage("https://www.transfermarkt.com/%s/jugendarbeit/verein/%d" %(teams[j]["club"], teams[j]["num"]))  
         else:    
@@ -42,7 +42,8 @@ for j in range(0,34):
                         name = page.find('div', {'class':"dataBild"}).find('img')['title']
                         if(page.find('table', {'class':"auflistung"}).find('a',{'class':"vereinprofil_tooltip"}) == None):
                             continue
-                        if((page.find('span',{'class':"mediumpunkt"})) == None):
+                        if((page.find('span',{'class':"mediumpunkt"})) == None or (page.find('span',{'class':"mediumpunkt"}).get_text()) == "National"
+                            or (page.find('span',{'class':"mediumpunkt"}).get_text()) == "Ligue 2" ):
                             continue
                         league = page.find('span',{'class':"mediumpunkt"}).find('a').get_text().strip()
                         currentClub = page.find('table', {'class':"auflistung"}).find('a',{'class':"vereinprofil_tooltip"}).find('img')['alt'].strip()
@@ -61,7 +62,7 @@ for j in range(0,34):
                         if(position == "Goalkeeper"):
                             assists = "0"
                         else:
-                            assists = statistics[4].get_text()
+                            assists = statistics[4].get_text().replace("-","0")
                         print(teams[j]["club"])
                         print(name)
                         print(position)
@@ -73,16 +74,4 @@ for j in range(0,34):
                         print(assists+"\n")
                         f.write(teams[j]["club"] + "," + name + "," + position + "," + currentClub + "," + league + "," + marketVal + "," + apps + "," + goals + "," + assists + "\n")
                         
-f.close()     
- #           my_json[teamName[j]][name.get_text()] = i
-            
-#print(my_json)
-#tds=tables[1].findAll('td')
-#print(tds[2].get_text())
-#currentClub = tds[7].find('img')['alt']
-#print(currentClub)
-
-#print(tds)
-
-# <td class="zentriert">
-# <td class="links">
+f.close()
